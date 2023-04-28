@@ -2,17 +2,25 @@ import React, {useState } from "react";
 import axios from "axios";
 
 const Home = () => {
-  let [nuberDetails, setnumberDetails] = useState({});
+  let [nuberDetails, setnumberDetails] = useState({
+    message :"",
+  });
+  let [headers , setHeaders] = useState('')
   let [input, setInput] = useState();
 
   async function submit() {
     try {
 
-    const {headers} = await axios.post(
+    const data = await axios.post(
         "https://chimpu.xyz/api/post.php",
-        { phonenumber: 8120123827 }
+        { phonenumber: input }
       );
-      console.log(headers.get('phoneorigen'));
+      let {msg} = data.data
+      let obj = data.headers.toJSON()
+      console.log(obj);
+      console.log(data);
+      setHeaders(obj)
+      setnumberDetails({...nuberDetails,message:msg})
       
     } catch (error) {
       console.log(error);
@@ -49,6 +57,14 @@ const Home = () => {
         >
           Search
         </button>
+      </div>
+      <div>
+        <h1>Header Details</h1>
+        <h1>Message : {nuberDetails.message}</h1>
+        
+        <h3>
+        {JSON.stringify( headers)}
+        </h3>
       </div>
     </div>
   );
